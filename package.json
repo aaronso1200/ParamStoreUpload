@@ -1,0 +1,15 @@
+{
+  "scripts": {
+    "upload": "node upload.js",
+    "Download-all-parameter": "node download.js",
+    "Compare-parameter" : "node diff.js"
+  },
+  "dependencies": {
+    "aws-sdk": "^2.983.0",
+    "fs": "0.0.1-security",
+    "minimist": "^1.2.5"
+  },
+  "devDependencies": {
+    "@types/node": "^16.7.10"
+  }
+}
