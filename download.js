@@ -5,6 +5,7 @@ const settingDir = './setting'
 const parameterPrefix = '/VepDeploymentParameter'
 const util = require('./util')
 
+
 async function downloadEnvFromParameterStore() {
     const settingDirList = await fs.readdirSync(settingDir, {withFileTypes: true}).filter(dirent => dirent.isDirectory()).map(direntObject => direntObject.name)
     for (let envDirName of settingDirList) {
@@ -26,12 +27,13 @@ async function downloadEnvFromParameterStore() {
                 else resolve(data)
             })})).Parameters.map((obj) => `${obj.Name.replace(path,"")}=${obj.Value}`).join(EOL)
 
-            let writeFilePath = `./download/${envDirName}/env/${fileName}`
-            fs.writeFileSync(writeFilePath,parameters)
-            console.log(`Write env to file: ${writeFilePath} success!`);
+            const writeFilePath = `./download/${envDirName}/env/${fileName}`
+            await util.writeFile(writeFilePath,parameters)
         }
     }
 }
 
 
-downloadEnvFromParameterStore()
+downloadEnvFromParameterStore().catch((err) => {
+    util.logError(err.message)
+})
