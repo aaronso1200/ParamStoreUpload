@@ -23,9 +23,11 @@ async function writeFile(fullFilePath,content) {
     console.log(filePath);
     if (!fs.existsSync(filePath)) {
         await fs.mkdirSync(filePath,{recursive:true})
+        console.log(`Create missing directory :${chalk.green.bold(filePath)}`)
+
     }
     await fs.writeFileSync(fullFilePath,content)
-    console.log(`Write content to file: ${fullFilePath} success!`);
+    console.log(`Write file: ${chalk.green.bold(fullFilePath)} success!`);
 }
 
 function logError(errMessage) {
