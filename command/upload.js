@@ -15,7 +15,7 @@ async function uploadAllEnvToStore() {
 async function uploadSingleEnvToStore(environmentName) {
     const targetEnvDir = path.join(__dirname,settingDir,environmentName,'env')
     const fileList = fs.readdirSync(targetEnvDir)
-    const settingJson = require(path.join(__dirname,`${settingDir}/${environmentName}/setting.json`))
+    const settingJson = require(path.join(__dirname,settingDir,environmentName,'setting.json'))
 
     const SSM = new AWS.SSM({
         accessKeyId: settingJson.accessKeyId,

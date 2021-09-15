@@ -4,30 +4,32 @@ const EnvObject = require("../utils/EnvObject");
 const assert = require("assert");
 const chalk = require("chalk");
 const parameterPrefix = '/VepDeploymentParameter'
+const path = require('path')
+const downloadDir = '../download'
 
-const settingDir = './setting'
+const settingDir = '../setting'
 const argv = require('minimist')(process.argv.slice(2));
 
 
 async function compareAllEnv() {
-    const settingDirList = await fs.readdirSync(settingDir, {withFileTypes: true}).filter(dirent => dirent.isDirectory()).map(direntObject => direntObject.name)
+    const settingDirList = await fs.readdirSync(path.join(__dirname,settingDir), {withFileTypes: true}).filter(dirent => dirent.isDirectory()).map(direntObject => direntObject.name)
     for (let envDirName of settingDirList) {
         await compareSingleEnv(envDirName)
     }
 }
 
 async function compareSingleEnv(environmentName) {
-    const targetEnvDir = `${settingDir}/${environmentName}/env`
+    const targetEnvDir = path.join(__dirname,settingDir,environmentName,'env')
     const fileList = fs.readdirSync(targetEnvDir)
     for (let fileName of fileList) {
-        const currentFileContent = await fs.readFileSync(`${targetEnvDir}/${fileName}`, {encoding: 'utf8', flag: 'r'})
-        const downloadedFileContent = await fs.readFileSync(`download/${argv.env}/env/${fileName}`, {encoding: 'utf8', flag: 'r'})
+        const currentFileContent = await fs.readFileSync(path.join(targetEnvDir,fileName), {encoding: 'utf8', flag: 'r'})
+        const downloadedFileContent = await fs.readFileSync(path.join(__dirname,downloadDir,environmentName,'env',fileName), {encoding: 'utf8', flag: 'r'})
         const currentFileObjectList = new EnvObject(currentFileContent).fileObjectList
         const downloadedFileObjectList = new EnvObject(downloadedFileContent).fileObjectList
 
         let isEnvObjSame = compareEnvObjectList(currentFileObjectList,downloadedFileObjectList);
         if (isEnvObjSame) {
-            console.log(`Env Parameter for ${fileName} in ${argv.env} is sync with local file.`)
+            console.log(`Env Parameter for ${chalk.green.bold(fileName)} in ${chalk.yellow.bold(environmentName)} is sync with local file.`)
         }
     }
 
