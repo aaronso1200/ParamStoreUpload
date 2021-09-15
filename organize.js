@@ -1,7 +1,7 @@
 
 const util = require("./util.js")
 const fs = require("fs");
-const EnvObject = require("./EnvObject");
+const EnvObject = require("./utils/EnvObject");
 const {EOL} = require("os");
 const settingDir = './setting'
 const argv = require('minimist')(process.argv.slice(2));
@@ -12,7 +12,8 @@ async function organizeEnvFiles() {
     const fileList = fs.readdirSync(targetEnvDir)
     for (let fileName of fileList) {
         const targetFile = `${targetEnvDir}/${fileName}`
-        const currentEnvObject = new EnvObject(targetFile)
+        const targetFileContent = fs.readFileSync(targetFile,{encoding: 'utf8', flag: 'r'})
+        const currentEnvObject = new EnvObject(targetFileContent)
         await util.writeFile(targetFile,currentEnvObject.organize().convertToEnvString())
     }
     console.log("Organize Env File Success")

@@ -2,12 +2,11 @@ const fs = require("fs");
 const {EOL} = require("os");
 
  module.exports = class EnvObject {
-     constructor(envFilePath) {
-        const fileContent =  fs.readFileSync(envFilePath, {encoding: 'utf8', flag: 'r'})
+     constructor(fileContent) {
         this.fileObjectList = fileContent.split(EOL).map((value,index) => {
             const separatorIndex = value.indexOf('=')
             if (separatorIndex === -1) {
-                throw `File in ${envFilePath} : Line ${index + 1} incorrect`
+                throw `Value : ${value} Incorrect`
             }
             return {keyName: value.substring(0, separatorIndex), value: value.substring(separatorIndex + 1)}
         })
@@ -26,4 +25,7 @@ const {EOL} = require("os");
         }).join(EOL)
     }
 
+    getFileObjectList() {
+         return this.fileObjectList
+    }
 }

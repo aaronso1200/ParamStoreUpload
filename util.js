@@ -39,4 +39,5 @@ function logError(errMessage) {
     console.log(boxen(chalkMessage, boxenOptions))
 }
 
+
 module.exports = {constructParameterPath,writeFile,logError}

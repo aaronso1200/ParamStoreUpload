@@ -5,7 +5,7 @@ const AWS = require('aws-sdk')
 const parameterPrefix = '/VepDeploymentParameter'
 const argv = require('minimist')(process.argv.slice(2));
 const util = require("./util.js")
-
+const EnvObject = require("./utils/EnvObject");
 
 async function uploadEnvToParameterStore() {
     const targetEnvDir = `${settingDir}/${argv.env}/env`
@@ -19,8 +19,8 @@ async function uploadEnvToParameterStore() {
     });
 
     fileList.forEach((fileName) => {
-        const envObject = readAndConvertEnvFileToObject(targetEnvDir,fileName);
-        envObject.forEach(async (value) => {
+        const envObject = new EnvObject(`${targetEnvDir}/${fileName}`)
+        envObject.fileObjectList.forEach(async (value) => {
             let paramName = util.constructParameterPath(parameterPrefix,settingJson.environmentName,fileName.replace(/\.[^/.]+$/, ""),value.keyName)
             let param = {
                 Name: paramName ,
@@ -37,10 +37,4 @@ async function uploadEnvToParameterStore() {
         })
     })
 }
-
-function readAndConvertEnvFileToObject(targetEnvDir,fileName) {
-    const fileContent = fs.readFileSync(`${targetEnvDir}/${fileName}`, {encoding: 'utf8', flag: 'r'})
-   return util.convertEnvStringToObject(fileContent,fileName)
-}
-
 uploadEnvToParameterStore();
