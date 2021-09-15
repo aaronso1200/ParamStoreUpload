@@ -7,8 +7,15 @@ const settingDir = './setting'
 const argv = require('minimist')(process.argv.slice(2));
 
 
-async function organizeEnvFiles() {
-    const targetEnvDir = `${settingDir}/${argv.env}/env`
+async function organizeAllEnvFiles() {
+    const settingDirList = await fs.readdirSync(settingDir, {withFileTypes: true}).filter(dirent => dirent.isDirectory()).map(direntObject => direntObject.name)
+    for (let envDirName of settingDirList) {
+        await organizeSingleEnvFile(envDirName)
+    }
+}
+
+async function organizeSingleEnvFile(environmentName) {
+    const targetEnvDir = `${settingDir}/${environmentName}/env`
     const fileList = fs.readdirSync(targetEnvDir)
     for (let fileName of fileList) {
         const targetFile = `${targetEnvDir}/${fileName}`
@@ -16,9 +23,17 @@ async function organizeEnvFiles() {
         const currentEnvObject = new EnvObject(targetFileContent)
         await util.writeFile(targetFile,currentEnvObject.organize().convertToEnvString())
     }
-    console.log("Organize Env File Success")
 }
 
-organizeEnvFiles().catch((err) => {
+async function processCmd() {
+    if (argv.env) {
+        await organizeSingleEnvFile(argv.env)
+    } else {
+        await organizeAllEnvFiles()
+    }
+}
+
+processCmd().catch((err) => {
     util.logError(err.message)
+    process.exit(1)
 })
