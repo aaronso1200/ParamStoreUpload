@@ -1,7 +1,7 @@
 
-const util = require("./util.js")
+const util = require("../utils/util.js")
 const fs = require("fs");
-const EnvObject = require("./utils/EnvObject");
+const EnvObject = require("../utils/EnvObject");
 const {EOL} = require("os");
 const settingDir = './setting'
 const argv = require('minimist')(process.argv.slice(2));

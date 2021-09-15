@@ -3,7 +3,7 @@ const AWS = require('aws-sdk')
 const {EOL} = require("os");
 const settingDir = './setting'
 const parameterPrefix = '/VepDeploymentParameter'
-const util = require('./util')
+const util = require('../utils/util')
 const argv = require('minimist')(process.argv.slice(2));
 
 async function downloadAllEnvFromStore() {

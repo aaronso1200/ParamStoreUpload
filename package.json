@@ -1,9 +1,9 @@
 {
   "scripts": {
-    "upload": "node upload.js",
-    "Download-all-parameter": "node download.js",
-    "Compare-parameter": "node diff.js",
-    "organize-parameter": "node organize.js"
+    "upload": "node command/upload.js",
+    "Download-all-parameter": "node command/download.js",
+    "Compare-parameter": "node command/diff.js",
+    "organize-parameter": "node command/organize.js"
   },
   "dependencies": {
     "aws-sdk": "^2.983.0",

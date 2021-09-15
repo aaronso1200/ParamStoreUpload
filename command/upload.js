@@ -4,8 +4,8 @@ const AWS = require('aws-sdk')
 
 const parameterPrefix = '/VepDeploymentParameter'
 const argv = require('minimist')(process.argv.slice(2));
-const util = require("./util.js")
-const EnvObject = require("./utils/EnvObject");
+const util = require("../utils/util.js")
+const EnvObject = require("../utils/EnvObject");
 
 async function uploadEnvToParameterStore() {
     const targetEnvDir = `${settingDir}/${argv.env}/env`
