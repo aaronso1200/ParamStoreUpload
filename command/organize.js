@@ -25,15 +25,15 @@ async function organizeSingleEnvFile(environmentName) {
     }
 }
 
-async function processCmd() {
-    if (argv.env) {
-        await organizeSingleEnvFile(argv.env)
+async function processCmd(arguments) {
+    if (arguments.env) {
+        await organizeSingleEnvFile(arguments.env)
     } else {
         await organizeAllEnvFiles()
     }
 }
 
-processCmd().catch((err) => {
+processCmd(argv).catch((err) => {
     util.logError(err.message)
     process.exit(1)
 })

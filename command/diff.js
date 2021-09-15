@@ -48,8 +48,8 @@ function compareEnvObjectList(currentFileObjectList,downloadedFileObjectList) {
 }
 
 
-async function processCmd() {
-    if (argv.env) {
+async function processCmd(arguments) {
+    if (arguments.env) {
         await compareSingleEnv(argv.env)
     } else {
         await compareAllEnv()
@@ -57,7 +57,7 @@ async function processCmd() {
 }
 
 
-processCmd().catch( (err) => {
+processCmd(argv).catch( (err) => {
     util.logError(err.message)
     process.exit(1)
 })

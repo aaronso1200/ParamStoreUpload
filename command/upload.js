@@ -44,8 +44,8 @@ async function uploadSingleEnvToStore(environmentName) {
     }
 }
 
-async function processCmd() {
-    if (argv.env) {
+async function processCmd(arguments) {
+    if (arguments.env) {
         await uploadSingleEnvToStore(argv.env)
     } else {
         await uploadAllEnvToStore()
@@ -54,7 +54,7 @@ async function processCmd() {
 
 
 
-processCmd().catch( (err) => {
+processCmd(argv).catch( (err) => {
     util.logError(err)
     process.exit(1)
 })

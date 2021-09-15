@@ -40,15 +40,15 @@ async function downloadSingleEnvFromStore(environmentName) {
     }
 }
 
-async function processCmd() {
-    if (argv.env) {
+async function processCmd(arguments) {
+    if (arguments.env) {
         await downloadSingleEnvFromStore(argv.env)
     } else {
         await downloadAllEnvFromStore()
     }
 }
 
-processCmd().catch((err) => {
+processCmd(argv).catch((err) => {
     util.logError(err.message)
     process.exit(1)
 })
