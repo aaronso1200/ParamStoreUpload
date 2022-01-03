@@ -26,7 +26,8 @@ async function compareSingleEnv(environmentName) {
         const downloadedFileContent = await fs.readFileSync(path.join(__dirname,downloadDir,environmentName,'env',fileName), {encoding: 'utf8', flag: 'r'})
         const currentFileObjectList = new EnvObject(currentFileContent).fileObjectList
         const downloadedFileObjectList = new EnvObject(downloadedFileContent).fileObjectList
-
+        console.log(`${chalk.white.bold('-'.repeat(20))}`)
+        console.log(`Checking ${chalk.green.bold(fileName)} in ${chalk.yellow.bold(environmentName)}:`)
         let isEnvObjSame = compareEnvObjectList(currentFileObjectList,downloadedFileObjectList);
         if (isEnvObjSame) {
             console.log(`Env Parameter for ${chalk.green.bold(fileName)} in ${chalk.yellow.bold(environmentName)} is sync with local file.`)
@@ -39,10 +40,20 @@ function compareEnvObjectList(currentFileObjectList,downloadedFileObjectList) {
     let result = true;
     for (let downloadFileObject of downloadedFileObjectList) {
         const currentFileObject = currentFileObjectList.find(obj => obj.keyName === downloadFileObject.keyName)
+        if (currentFileObject === undefined) {
+            console.log(`Missing param  ${chalk.red.bold(downloadFileObject.keyName)} in local file`)
+            return false;
+        }
+
         if (!currentFileObject.value || downloadFileObject.value !== currentFileObject.value) {
             console.log(`Param ${chalk.green.bold(downloadFileObject.keyName)} value not sync. Value in local file: ${chalk.green.bold(currentFileObject.value)}, Value in Param store: ${chalk.green.bold(downloadFileObject.value)}`)
             result =  false
         }
+    }
+
+    for (let missingKey of currentFileObjectList.filter(x=>!downloadedFileObjectList.map(y=> y.keyName).includes(x.keyName))) {
+        console.log(`Param ${chalk.green.bold(missingKey.keyName)} does not exist in param store.`)
+        result = false;
     }
     return result;
 }
@@ -57,7 +68,4 @@ async function processCmd(arguments) {
 }
 
 
-processCmd(argv).catch( (err) => {
-    util.logError(err.message)
-    process.exit(1)
-})
+processCmd(argv).catch(ex=> console.log(ex))
