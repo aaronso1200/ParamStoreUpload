@@ -21,7 +21,7 @@ async function downloadSingleEnvFromStore(environmentName) {
     const SSM = new AWS.SSM({
         accessKeyId: settingJson.accessKeyId,
         secretAccessKey: settingJson.secretAccessKey,
-        region: 'ap-east-1',
+        region: settingJson.region,
     });
     const fileList = await fs.readdirSync(path.join(__dirname,settingDir,environmentName,'env'))
     for (let fileName of fileList) {
