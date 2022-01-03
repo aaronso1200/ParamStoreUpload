@@ -20,9 +20,8 @@ async function uploadSingleEnvToStore(environmentName) {
     const SSM = new AWS.SSM({
         accessKeyId: settingJson.accessKeyId,
         secretAccessKey: settingJson.secretAccessKey,
-        region: 'ap-east-1',
+        region: settingJson.region,
     });
-
     for (let fileName of fileList) {
         const fileContent = await fs.readFileSync(path.join(targetEnvDir,fileName), {encoding: 'utf8', flag: 'r'})
         const envObject = new EnvObject(fileContent)
@@ -41,6 +40,7 @@ async function uploadSingleEnvToStore(environmentName) {
             })});
             console.log(result);
         }
+        await sleep(2000)
     }
 }
 
@@ -58,3 +58,9 @@ processCmd(argv).catch( (err) => {
     util.logError(err)
     process.exit(1)
 })
+
+function sleep(ms) {
+    return new Promise((resolve) => {
+        setTimeout(resolve, ms);
+    });
+}
